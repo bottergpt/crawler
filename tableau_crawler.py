@@ -39,26 +39,26 @@ class CrawlTableau(object):
                 a.append(int(i.text[:-2]))
         assert len(url_all) == sum(a)
         self.url_lst = url_all
-        
+
     def generate_cookie(self):
         browser = webdriver.Chrome()
         browser.get(self.url_test)
         # src = browser.page_source
         cookies2 = browser.get_cookies()
         print(cookies2)
-        browser.delete_all_cookies() # delete all cookies
-        time.sleep(20) # unfinished... add condition to auto process
+        browser.delete_all_cookies()  # delete all cookies
+        time.sleep(20)  # unfinished... add condition to auto process
         # 手动登录之后执行：
         cookies = browser.get_cookies()
         with open("../test/cookies.pkl", 'wb') as f:
             pickle.dump(cookies, f)
-            
+
     def get_src(self, url_test):
         try:
             cookies = pickle.load(open("../test/cookies.pkl", "rb"))
         except:
             self.generate_cookie()
-            
+
         browser = webdriver.Chrome(options=chrome_options)
         browser.get(url_test)
         for cookie in cookies:
@@ -118,9 +118,91 @@ class CrawlTableau(object):
                 else:
                     print('%r page finished with NO EXCEPTION! ' % url)
         self.error_lst = error_lst
-        
+
+    @staticmethod
+    def test():
+        url_test = 'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/input-step?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=tableau_prep'
+        try:
+            cookies = pickle.load(open("../test/cookies.pkl", "rb"))
+        except:
+            self.generate_cookie()
+        browser = webdriver.Chrome()
+        browser.get(url_test)
+        for cookie in cookies:
+            browser.add_cookie(cookie)
+        browser.get(url_test)
+        try:
+            # 点击播放视频：
+            bt = browser.find_element_by_css_selector('#edit-gain-access')
+            bt.click()
+        except:
+            pass
+        finally:
+            # 获得源码
+            src = browser.page_source
+            browser.close()
+        soup = BeautifulSoup(src, 'lxml')
+        sub_link_all = []
+        for link in soup.find_all(
+                class_='mp4-download-link link link--download'):
+            sub_link_all.append(link.get('href'))
+
 
 if __name__ == '__main__':
     # url_all = pickle.load(open("../test/url_all.pkl", "rb"))
     CT = CrawlTableau(url_lst=None)
     CT.get_all_download_link()
+    dict_0 = CT.dict_all
+    error_lst = CT.error_lst
+    if not error_lst:
+        CT2 = CrawlTableau(url_lst=error_lst)
+        CT2.get_all_download_link()
+        dict_1 = CT2.dict_all
+#     error_lst2 = CT2.error_lst  # for further checking
+
+    for topic, sub_topic_dict in dict_1.items():
+        if topic in dict_0:
+            for kv, vv in sub_topic_dict.items():
+                dict_0[sub_topic_dict][kv] = vv
+        else:
+            dict_0[topic] = sub_topic_dict
+
+    # check dict_0: if there are some useless urls existing..
+    for topic, sub_topic_dict in dict_0.items():
+        for sub_topic_nm, sub_topic_lst in sub_topic_dict.items():
+            for iurl in sub_topic_lst:
+                if not iurl.startswith('https://'):
+                    print(topic, ' || ', sub_topic_nm, ' || ', iurl)
+
+    # add manully ... (for further improvement)
+    fault_url_lst = [
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/input-step?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=tableau_prep',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/cleaning-step?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=tableau_prep',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/managing-metadata?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=connecting_data',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/managing-extracts?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=connecting_data',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/parameters?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=visual_analytics',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/working-sets?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=visual_analytics',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/additional-filtering-topics?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=visual_analytics',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/intro-table-calculations?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=calculations',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/cloned-filtering-top-across-panes?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=why_tableau_doing',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/using-parameter-change-fields?product=tableau_desktop%2Btableau_prep&version=10_0%2Btableau_prep_2018_1_1&topic=how',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/interacting-content-tableau-online?product=tableau_server%2Btableau_online&version=10_0%2Btableau_prep_2018_1_1&topic=collaborate_tableau_online',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/navigating-tableau-mobile-app?product=tableau_server%2Btableau_online&version=10_0%2Btableau_prep_2018_1_1&topic=collaborate_tableau_online',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/web-authoring-online-10?product=tableau_server%2Btableau_online&version=10_0%2Btableau_prep_2018_1_1&topic=collaborate_tableau_online',
+        'https://www.tableau.com/zh-cn/learn/tutorials/on-demand/interacting-content-tableau-mobile-app?product=tableau_server%2Btableau_online&version=10_0%2Btableau_prep_2018_1_1&topic=collaborate_tableau_online'
+    ]
+
+    CT3 = CrawlTableau(url_lst=fault_url_lst)
+    CT3.get_all_download_link()
+
+    dict_3 = CT3.dict_all
+
+    for topic, sub_topic_dict in dict_3.items():
+        if topic in dict_0:
+            for kv, vv in sub_topic_dict.items():
+                dict_0[sub_topic_dict][kv] = vv
+        else:
+            dict_0[topic] = sub_topic_dict
+
+    with open('tableau.pkl', 'wb') as f:
+        pickle.dump(dict_0, f)
