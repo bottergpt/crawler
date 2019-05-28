@@ -85,6 +85,7 @@ class CrawlTableau(object):
         self.get_download_link(src)
 
     def get_all_download_link(self):
+        error_lst = []
         with ThreadPoolExecutor(max_workers=10) as executor:
             future_to_url = {
                 executor.submit(self._wrapper_for_parellel, url): url
@@ -96,8 +97,11 @@ class CrawlTableau(object):
                     data = future.result()
                 except Exception as exc:
                     print('%r generated an exception: %s' % (url, exc))
+                    error_lst.append(url)
                 else:
                     print('%r page finished with NO EXCEPTION! ' % url)
+        self.error_lst = error_lst
+
 
 if __name__ == '__main__':
     # url_all = pickle.load(open("../test/url_all.pkl", "rb"))
