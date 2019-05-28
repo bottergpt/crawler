@@ -1,0 +1,1 @@
+These two scripts in the folder are used to download tableau tutorials. It's not that convenience for me to use the video tutorials online because of no speeding up supported. So, I decided to write a script to download all the turorials in batch.
