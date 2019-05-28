@@ -7,7 +7,7 @@ chrome_options = Options()
 # chrome_options.headless = True
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')  # for Windows OS ...
-chrome_options.add_argument("--mute-audio")
+
 
 class CrawlTableau(object):
     def __init__(self, url_lst):
@@ -39,9 +39,26 @@ class CrawlTableau(object):
                 a.append(int(i.text[:-2]))
         assert len(url_all) == sum(a)
         self.url_lst = url_all
-
+        
+    def generate_cookie(self):
+        browser = webdriver.Chrome()
+        browser.get(self.url_test)
+        # src = browser.page_source
+        cookies2 = browser.get_cookies()
+        print(cookies2)
+        browser.delete_all_cookies() # delete all cookies
+        time.sleep(20) # unfinished... add condition to auto process
+        # 手动登录之后执行：
+        cookies = browser.get_cookies()
+        with open("../test/cookies.pkl", 'wb') as f:
+            pickle.dump(cookies, f)
+            
     def get_src(self, url_test):
-        cookies = pickle.load(open("../test/cookies.pkl", "rb"))
+        try:
+            cookies = pickle.load(open("../test/cookies.pkl", "rb"))
+        except:
+            self.generate_cookie()
+            
         browser = webdriver.Chrome(options=chrome_options)
         browser.get(url_test)
         for cookie in cookies:
@@ -101,7 +118,7 @@ class CrawlTableau(object):
                 else:
                     print('%r page finished with NO EXCEPTION! ' % url)
         self.error_lst = error_lst
-
+        
 
 if __name__ == '__main__':
     # url_all = pickle.load(open("../test/url_all.pkl", "rb"))
