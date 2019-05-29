@@ -7,7 +7,7 @@ chrome_options = Options()
 # chrome_options.headless = True
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')  # for Windows OS ...
-
+chrome_options.add_argument("--mute-audio")
 
 class CrawlTableau(object):
     def __init__(self, url_lst):

@@ -2,9 +2,7 @@ import requests
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pickle
-dict_0 = pickle.load(open("tableau.pkl", "rb"))
 
-BASE_DIR = os.getcwd()
 
 class Downloader(object):
     def __init__(self, dict_0=None, url_info_lst=None):
@@ -36,7 +34,8 @@ class Downloader(object):
     def _sub_downloader(self, info_tuple):
 
         topic, sub_topic_nm, iurl = info_tuple
-        file_path = os.path.join(BASE_DIR, topic, sub_topic_nm)
+        file_path = os.path.join(BASE_DIR, 'tableau_tutorials', topic,
+                                 sub_topic_nm)
         self.mk_dir(file_path)
         r = requests.get(iurl, stream=True)
         if '.mp4' in iurl:  # or 'videoId' in iurl):
@@ -58,7 +57,7 @@ class Downloader(object):
 
     def parallel_downloader(self):
         error_lst = []
-        with ThreadPoolExecutor(max_workers=8) as executor:
+        with ThreadPoolExecutor(max_workers=10) as executor:
             future_to_url = {
                 executor.submit(self._sub_downloader, url_tuple): url_tuple
                 for url_tuple in self.url_info_lst
@@ -68,17 +67,20 @@ class Downloader(object):
                 try:
                     data = future.result()
                 except Exception as exc:
-                    print('%r generated an exception: %s' % (url_tuple, exc))
+                    print(f'Generated an exception({exc})! **{url_tuple}**')
                     error_lst.append(url_tuple)
                     print(
                         "---------------------------------------------------")
                 else:
-                    print('%r page finished with NO EXCEPTION! ' % url_tuple)
+                    print(f'Finished with NO EXCEPTION! @@ {url_tuple} @@')
                     print(
                         "---------------------------------------------------")
-
         self.error_lst = error_lst
 
 if __name__ == '__main__':
+    # BASE_DIR = os.getcwd()
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    print(BASE_DIR)
+    dict_0 = pickle.load(open(os.path.join(BASE_DIR, "tableau.pkl"), "rb"))
     DLD = Downloader(dict_0=dict_0, url_info_lst=None)
     DLD.parallel_downloader()
