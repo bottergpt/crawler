@@ -9,7 +9,6 @@ import re
 import os
 import sys
 import random
-
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
 from selenium import webdriver
