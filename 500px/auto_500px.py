@@ -28,9 +28,9 @@ tms = 'https://500px.me/community/user-details/e0fca793f468a98473a1e86284aff4612
 lian = 'https://500px.me/community/user-details/1351a0c0e4c199afcbe9ff48d579d2047'
 xiaokai = 'https://500px.me/community/user-details/7228ae6fd4cf2b0436b43bbf3a4da1423'
 
-cookie_bo = 'cookies_500px_bother'
-cookie_lz = 'cookies_500px_lukezhang'
-
+cookie_bo = 'cookies_500px_bother.pkl'
+cookie_lz = 'cookies_500px_lukezhang.pkl'
+zdk = 'https://500px.me/community/user-details/b122fef8a4d34865573287edd1f3f1137'
 
 class Crawler_500px(object):
     def __init__(self,
@@ -44,6 +44,7 @@ class Crawler_500px(object):
             self.base_dir = os.path.dirname(os.path.abspath(__file__))
         except:
             self.base_dir = os.getcwd()
+        self.cookie_path = os.path.join(self.base_dir,self.use_cookie)
         self.userID = userID
         self.chrome_options = chrome_options
 
@@ -73,15 +74,16 @@ class Crawler_500px(object):
         time.sleep(60)  # unfinished... add condition to auto process
         # enter your passwd and UserID manually ...
         cookies = browser.get_cookies()
-        with open(f"./{self.use_cookie}.pkl", 'wb') as f:
+        with open(self.cookie_path, 'wb') as f:
             pickle.dump(cookies, f)
 
     def auto_login(self):
+
         try:
-            cookies = pickle.load(open(f"./{self.use_cookie}.pkl", "rb"))
+            cookies = pickle.load(open(self.cookie_path, "rb"))
         except:
             self.generate_cookie()
-            cookies = pickle.load(open(f"./{self.use_cookie}.pkl", "rb"))
+            cookies = pickle.load(open(self.cookie_path, "rb"))
         browser = webdriver.Chrome(options=self.chrome_options)
         browser.get(self.target_url)
         for cookie in cookies:
@@ -199,9 +201,9 @@ class Crawler_500px(object):
 
 if __name__ == '__main__':
     cpx = Crawler_500px(
-        target_url=lian,
+        target_url=zdk,
         use_cookie=cookie_lz,
-        userID='lian',
+        userID='zkd',
         chrome_options=chrome_options)
     #     cpx.auto_like()
-    cpx.downloader()
+    cpx.auto_like()
