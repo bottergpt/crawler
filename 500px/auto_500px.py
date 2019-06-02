@@ -32,6 +32,7 @@ cookie_bo = 'cookies_500px_bother.pkl'
 cookie_lz = 'cookies_500px_lukezhang.pkl'
 zdk = 'https://500px.me/community/user-details/b122fef8a4d34865573287edd1f3f1137'
 
+
 class Crawler_500px(object):
     def __init__(self,
                  target_url,
@@ -44,7 +45,7 @@ class Crawler_500px(object):
             self.base_dir = os.path.dirname(os.path.abspath(__file__))
         except:
             self.base_dir = os.getcwd()
-        self.cookie_path = os.path.join(self.base_dir,self.use_cookie)
+        self.cookie_path = os.path.join(self.base_dir, self.use_cookie)
         self.userID = userID
         self.chrome_options = chrome_options
 
@@ -207,4 +208,3 @@ if __name__ == '__main__':
         chrome_options=chrome_options)
     #     cpx.auto_like()
     cpx.auto_like()
-    # test git
