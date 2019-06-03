@@ -205,6 +205,6 @@ if __name__ == '__main__':
         target_url=zdk,
         use_cookie=cookie_lz,
         userID='zkd',
-        chrome_options=chrome_options)
+        chrome_options=None)
     #     cpx.auto_like()
     cpx.auto_like()
