@@ -1,29 +1,28 @@
 import time
 import pickle
-import re
 import os
-import sys
-import random
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import requests
 from selenium import webdriver
 
 import logging
 logging.basicConfig(level=logging.INFO)
-
 
 class BaseCrawler(object):
     def __init__(self,
                  target_url,
                  cookie_nm='cookie_default',
                  chrome_options=None):
-        self.__get_base_dir()
+        self.target_url = target_url
         self.chrome_options = chrome_options
         self.cookie_nm = cookie_nm
+        self.base_dir = os.getcwd()
         self.cookie_path = os.path.join(self.base_dir,
                                         '%s.pkl' % self.cookie_nm)
 
+
     def __get_base_dir(self):
+        print(__file__)
+        print(os.path.abspath(__file__))
+        print(os.getcwd())
         try:
             self.base_dir = os.path.dirname(os.path.abspath(__file__))
         except:
