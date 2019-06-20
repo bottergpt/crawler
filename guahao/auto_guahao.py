@@ -2,12 +2,9 @@ import os
 import time
 try:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    print(BASE_DIR)
-    print(os.chdir(BASE_DIR))
+    logging.info(BASE_DIR)
 except:
     pass
-import sys
-sys.path.append('..')
 from crawler_base.base import BaseCrawler
 import logging
 from pyquery import PyQuery as pq

@@ -7,26 +7,27 @@ import time
 import pickle
 import re
 import os
+import logging
+logging.basicConfig(level=logging.INFO)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+logging.info(BASE_DIR)
 import sys
+sys.path.append(BASE_DIR)
 import random
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 # from selenium.webdriver.common.keys import Keys
-chrome_options = Options()
-# chrome_options.headless = True
-chrome_options.add_argument('--headless')
-chrome_options.add_argument('--disable-gpu')  # for Windows OS ...
-chrome_options.add_argument("--mute-audio")
-import logging
-logging.basicConfig(level=logging.INFO)
+from config.browser_config import chrome_options
+
 
 fuxiao = 'https://500px.me/fuxiao718'
 jkt = 'https://500px.me/community/user-details/e914f856b4b3f9d7dc9c82dfaac033703'
 tms = 'https://500px.me/community/user-details/e0fca793f468a98473a1e86284aff4612'
 lian = 'https://500px.me/community/user-details/1351a0c0e4c199afcbe9ff48d579d2047'
 xiaokai = 'https://500px.me/community/user-details/7228ae6fd4cf2b0436b43bbf3a4da1423'
+bother = 'https://500px.me/bother'
 
 cookie_bo = 'cookies_500px_bother.pkl'
 cookie_lz = 'cookies_500px_lukezhang.pkl'
@@ -199,12 +200,20 @@ class Crawler_500px(object):
         else:
             logging.info("All pics successfully downloaded!")
 
+    def add_pageview(self):
+        browser = self.auto_login()
+        while True:
+            browser.refresh()
+            slp_time = random.random()+random.randint(0,2)
+            time.sleep(slp_time)
+        browser.close()
 
 if __name__ == '__main__':
     cpx = Crawler_500px(
-        target_url=zdk,
+        target_url=bother,
         use_cookie=cookie_lz,
-        userID='zkd',
-        chrome_options=None)
+        userID='bother',
+        chrome_options=chrome_options)
     #     cpx.auto_like()
-    cpx.auto_like()
+    # cpx.auto_like()
+    cpx.add_pageview()
