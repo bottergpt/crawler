@@ -204,7 +204,8 @@ class Crawler_500px(object):
         browser = self.auto_login()
         while True:
             browser.refresh()
-            slp_time = random.random()+random.randint(0,2)
+            # slp_time = random.random() + random.randint(0, 2)
+            slp_time = random.random()
             time.sleep(slp_time)
         browser.close()
 
