@@ -27,7 +27,7 @@ jkt = 'https://500px.me/community/user-details/e914f856b4b3f9d7dc9c82dfaac033703
 tms = 'https://500px.me/community/user-details/e0fca793f468a98473a1e86284aff4612'
 lian = 'https://500px.me/community/user-details/1351a0c0e4c199afcbe9ff48d579d2047'
 xiaokai = 'https://500px.me/community/user-details/7228ae6fd4cf2b0436b43bbf3a4da1423'
-bother = 'https://500px.me/bother'
+bother = 'https://500px.me/zhangqibot'
 
 cookie_bo = 'cookies_500px_bother.pkl'
 cookie_lz = 'cookies_500px_lukezhang.pkl'

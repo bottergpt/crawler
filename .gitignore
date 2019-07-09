@@ -2,3 +2,5 @@
 *.zip
 */tableau_tutorials/
 */500px_fotos/
+*/nsidc_data/
+!nsidc_data/all_url_list.pkl
