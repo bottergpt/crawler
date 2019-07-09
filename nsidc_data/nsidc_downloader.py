@@ -13,6 +13,12 @@ import pickle
 #     BASE_DIR = !pwd
 #     BASE_DIR = BASE_DIR[0]
 
+CookieInfo = "f5_cspm=1234; _ga=GA1.2.1789903767.1557988093; CIsForCookie_OPS=XSQ9S8jdokai31SvASdvsQAAADg; f5avr0039763557aaaaaaaaaaaaaaaa=JBIILLKNBOBNNKKHPKLCMKEDIHJEKABNCKMFLPOKDODJDMLPOIEFKNONINACBPOAJDCCPDFDELAIHKPDJKEAEILOAFDFFECEDHKGHCIJELCHINDDJPELAFJMGFPHFNFG"
+UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+HEADERS = {'Cookie': CookieInfo, 'User-Agent': UserAgent}
+RAW_URL = "https://n5eil01u.ecs.nsidc.org/ATLAS/ATL06.001/"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def get_sub_dir_path(url=RAW_URL, headers=HEADERS):
     resp = requests.get(url, headers=headers).text
@@ -126,10 +132,5 @@ def main():
 
 
 if __name__ == '__main__':
-    CookieInfo = "f5_cspm=1234; _ga=GA1.2.1789903767.1557988093; CIsForCookie_OPS=XSQ9S8jdokai31SvASdvsQAAADg; f5avr0039763557aaaaaaaaaaaaaaaa=JBIILLKNBOBNNKKHPKLCMKEDIHJEKABNCKMFLPOKDODJDMLPOIEFKNONINACBPOAJDCCPDFDELAIHKPDJKEAEILOAFDFFECEDHKGHCIJELCHINDDJPELAFJMGFPHFNFG"
-    UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
-    HEADERS = {'Cookie': CookieInfo, 'User-Agent': UserAgent}
-    RAW_URL = "https://n5eil01u.ecs.nsidc.org/ATLAS/ATL06.001/"
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     logging.info(BASE_DIR)
     main()
